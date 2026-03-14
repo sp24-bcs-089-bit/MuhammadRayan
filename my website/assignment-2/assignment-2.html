@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Third Class Coffee</title>
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+.top-banner{
+background:#7FAE9E;
+color:white;
+text-align:center;
+padding:8px;
+font-size:14px;
+}
+.header{
+background:white;
+padding:3px;
+position:relative;
+}
+.header img{
+height:200px;
+width:500px;
+max-width:90%;
+display:block;
+margin:0 auto;
+}
+.order-buttons{
+text-align:center;
+margin-top:10px;
+}
+.order-buttons button{
+padding:10px 25px;
+margin:5px;
+border:1px solid #141C23;
+background:white;
+color:#141C23;
+cursor:pointer;
+}
+.nav-container{
+position:absolute;
+top:10px;
+left:10px;
+}
+.hamburger{
+display:block;
+font-size:28px;
+cursor:pointer;
+padding:10px;
+}
+.nav-links{
+display:none;
+background:white;
+position:absolute;
+top:50px;
+left:0;
+padding:10px 0;
+width:150px;
+border:1px solid #ddd;
+}
+.nav-links a{
+display:block;
+text-decoration:none;
+color:#333;
+padding:8px 10px;
+border-bottom:1px solid #eee;
+}
+.hero{
+background:#7FAE9E;
+padding:80px 60px;
+text-align:center;
+}
+.hero-text h1{
+font-size:50px;
+margin:0;
+color:white;
+}
+.hero-text p{
+font-size:18px;
+color:white;
+}
+.hero-text button{
+background:#D39A62;
+border:none;
+padding:15px 30px;
+color:white;
+margin-top:20px;
+cursor:pointer;
+}
+.hero-image img{
+width:300px;
+height:auto;
+}
+.products{
+text-align:center;
+padding:40px 20px;
+}
+.product-card{
+display:inline-block;
+width:220px;
+max-width:90%;
+background:white;
+margin:15px;
+border-radius:10px;
+}
+.product-card img{
+width:100%;
+height:200px;
+}
+.price-bar{
+background:#141C23;
+color:white;
+padding:8px;
+}
+.footer{
+background:#7FAE9E;
+text-align:center;
+padding:40px 20px;
+color:white;
+margin-top:40px;
+}
+@media (max-width:768px){
+.hero-text h1{
+font-size:36px;
+}
+.hero-text p{
+font-size:16px;
+}
+.hero-image img{
+width:200px;
+}
+.product-card{
+width:45%;
+margin:10px 2.5%;
+}
+}
+@media (max-width:480px){
+.hero-text h1{
+font-size:28px;
+}
+.hero-text p{
+font-size:14px;
+}
+.product-card{
+width:90%;
+margin:10px auto;
+}
+.hero-image img{
+width:150px;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+Fresh Roasts, Fast Delivery Nationwide!
+</div>
+
+<div class="header">
+<div class="nav-container">
+<div class="hamburger" onclick="toggleMenu()">☰</div>
+<div class="nav-links" id="menu">
+<a href="#">Home</a>
+<a href="#">All Products</a>
+<a href="#">RickShot</a>
+<a href="#">Register</a>
+<a href="#">Login</a>
+<a href="#">Order</a>
+</div>
+</div>
+<img src="images/title.png">
+<div class="order-buttons">
+<button>Delivery</button>
+<button>Self Pickup</button>
+</div>
+</div>
+
+<div class="hero">
+<div class="hero-text">
+<h1>NEW SEASON<br>NEW BREW</h1>
+<p>Explore our latest limited edition roast</p>
+<button>TRY IT NOW</button>
+</div>
+<div class="hero-image">
+<img src="images/coffeebag.jpeg">
+</div>
+</div>
+
+<div class="products">
+<h2>RISE & SHOT</h2>
+<div class="product-card">
+<img src="images/cap.jpeg">
+<h3>Denim Cap</h3>
+<p>PKR 2500</p>
+<div class="price-bar">Out of Stock</div>
+</div>
+<div class="product-card">
+<img src="images/cans.webp">
+<h3>Cans</h3>
+<p>PKR 950</p>
+<div class="price-bar">Out of Stock</div>
+</div>
+<div class="product-card">
+<img src="images/tumbler.webp">
+<h3>Tumbler</h3>
+<p>PKR 5000</p>
+<div class="price-bar">Out of Stock</div>
+</div>
+<div class="product-card">
+<img src="images/giftcard.webp">
+<h3>Gift Shot</h3>
+<p>PKR 2500</p>
+<div class="price-bar">Out of Stock</div>
+</div>
+</div>
+
+<div class="footer">
+<p>Our Journey | Our Locations</p>
+<p>© 2026 All Rights Reserved</p>
+</div>
+
+<script>
+function toggleMenu() {
+    var menu = document.getElementById('menu');
+    if(menu.style.display=='block'){
+        menu.style.display='none';
+    } else {
+        menu.style.display='block';
+    }
+}
+</script>
+
+</body>
+</html>
