@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; }
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #141C23;
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+}
+.sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #7FAE9E;
+    letter-spacing: 1px;
+}
+.sidebar a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a3540;
+    font-size: 14px;
+}
+.sidebar a:hover { color: white; }
+
+/* Main */
+.main {
+    margin-left: 220px;
+    padding: 40px;
+    width: 100%;
+}
+.main h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #141C23;
+}
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.btn-add {
+    background: #7FAE9E;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 4px;
+}
+.btn-add:hover { background: #5d9180; }
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+th {
+    background: #141C23;
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f9f9f9; }
+
+.product-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+.badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #e8f4f0;
+    color: #5d9180;
+}
+.btn-edit {
+    background: #D39A62;
+    color: white;
+    padding: 6px 14px;
+    text-decoration: none;
+    font-size: 13px;
+    border-radius: 4px;
+    margin-right: 6px;
+}
+.btn-edit:hover { background: #b87d45; }
+.btn-delete {
+    background: #e05555;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-delete:hover { background: #c03c3c; }
+
+.stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card {
+    background: white;
+    padding: 20px 28px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    flex: 1;
+    text-align: center;
+}
+.stat-card h3 { font-size: 28px; color: #141C23; }
+.stat-card p { font-size: 13px; color: #888; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>☕ ADMIN</h2>
+    <a href="/admin">📊 Dashboard</a>
+    <a href="/admin/add">➕ Add Product</a>
+    <a href="/products">🛍 View Store</a>
+    <a href="/">🏠 Home</a>
+</div>
+
+<div class="main">
+    <h1>Product Dashboard</h1>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h3><%= products.length %></h3>
+            <p>Total Products</p>
+        </div>
+        <div class="stat-card">
+            <h3><%= products.filter(p => p.stock > 0).length %></h3>
+            <p>In Stock</p>
+        </div>
+        <div class="stat-card">
+            <h3><%= products.filter(p => p.stock === 0).length %></h3>
+            <p>Out of Stock</p>
+        </div>
+        <div class="stat-card">
+            <h3><%= [...new Set(products.map(p => p.category))].length %></h3>
+            <p>Categories</p>
+        </div>
+    </div>
+
+    <div class="top-bar">
+        <span style="font-size:14px; color:#888;"><%= products.length %> products found</span>
+        <a href="/admin/add" class="btn-add">+ Add New Product</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price (PKR)</th>
+                <th>Stock</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product => { %>
+            <tr>
+                <td><img src="<%= product.image %>" class="product-img" alt="<%= product.name %>"></td>
+                <td><strong><%= product.name %></strong></td>
+                <td><span class="badge"><%= product.category %></span></td>
+                <td><%= product.price.toLocaleString() %></td>
+                <td><%= product.stock %></td>
+                <td>⭐ <%= product.rating %></td>
+                <td>
+                    <a href="/admin/edit/<%= product._id %>" class="btn-edit">Edit</a>
+                    <form action="/admin/delete/<%= product._id %>" method="POST" style="display:inline"
+                          onsubmit="return confirm('Are you sure you want to delete <%= product.name %>?')">
+                        <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
