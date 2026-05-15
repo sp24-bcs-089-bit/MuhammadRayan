@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Product - Admin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; }
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #141C23;
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+}
+.sidebar h2 { font-size: 18px; margin-bottom: 30px; color: #7FAE9E; letter-spacing: 1px; }
+.sidebar a { display: block; color: #ccc; text-decoration: none; padding: 10px 0; border-bottom: 1px solid #2a3540; font-size: 14px; }
+.sidebar a:hover { color: white; }
+.main { margin-left: 220px; padding: 40px; width: 100%; }
+.main h1 { font-size: 24px; margin-bottom: 30px; color: #141C23; }
+.form-card {
+    background: white;
+    padding: 36px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    max-width: 600px;
+}
+.form-group { margin-bottom: 20px; }
+label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+input:focus, select:focus { outline: none; border-color: #7FAE9E; }
+.btn-submit {
+    background: #D39A62;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+.btn-submit:hover { background: #b87d45; }
+.btn-back { display: inline-block; margin-bottom: 20px; color: #888; text-decoration: none; font-size: 13px; }
+.btn-back:hover { color: #141C23; }
+.current-image { margin-top: 10px; }
+.current-image img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
+.current-image p { font-size: 12px; color: #888; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>☕ ADMIN</h2>
+    <a href="/admin">📊 Dashboard</a>
+    <a href="/admin/add">➕ Add Product</a>
+    <a href="/products">🛍 View Store</a>
+    <a href="/">🏠 Home</a>
+</div>
+
+<div class="main">
+    <a href="/admin" class="btn-back">← Back to Dashboard</a>
+    <h1>Edit Product</h1>
+
+    <div class="form-card">
+        <form action="/admin/edit/<%= product._id %>" method="POST" enctype="multipart/form-data" id="editForm">
+
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" name="name" value="<%= product.name %>" required>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category" required>
+                    <option value="">-- Select Category --</option>
+                    <% ["Coffee", "Accessories", "Apparel", "Gifts"].forEach(cat => { %>
+                        <option value="<%= cat %>" <%= product.category === cat ? 'selected' : '' %>><%= cat %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Price (PKR)</label>
+                <input type="number" name="price" value="<%= product.price %>" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Stock</label>
+                <input type="number" name="stock" value="<%= product.stock %>" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Rating (0–5)</label>
+                <input type="number" name="rating" value="<%= product.rating %>" min="0" max="5" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Product Image</label>
+                <div class="current-image">
+                    <img src="<%= product.image %>" alt="Current image">
+                    <p>Current image — upload a new one to replace it</p>
+                </div>
+                <input type="file" name="image" accept="image/*" style="margin-top:10px">
+            </div>
+
+            <button type="submit" class="btn-submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById("editForm").addEventListener("submit", function(e) {
+    const inputs = this.querySelectorAll("input[required], select[required]");
+    let valid = true;
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.style.borderColor = "#e05555";
+            valid = false;
+        } else {
+            input.style.borderColor = "#ddd";
+        }
+    });
+    if (!valid) {
+        e.preventDefault();
+        alert("Please fill in all required fields.");
+    }
+});
+</script>
+
+</body>
+</html>
