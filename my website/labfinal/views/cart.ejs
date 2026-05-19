@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart - Third Class Coffee</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.cart-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+.cart-container h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #ddd;
+  padding: 16px 0;
+}
+.cart-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+.cart-item-info {
+  flex: 1;
+}
+.cart-item-info h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+.cart-item-info p {
+  margin: 0;
+  color: #555;
+  font-size: 14px;
+}
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cart-item-actions input[type="number"] {
+  width: 60px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: center;
+}
+.cart-item-actions button {
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-update {
+  background: #141C23;
+  color: white;
+}
+.btn-update:hover { background: #7FAE9E; }
+.btn-remove {
+  background: #eee;
+  color: #333;
+}
+.btn-remove:hover { background: #ddd; }
+.cart-total {
+  text-align: right;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 24px 0;
+}
+.checkout-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #141C23;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+.checkout-btn:hover { background: #7FAE9E; }
+.empty-cart {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  font-size: 18px;
+}
+.empty-cart a {
+  color: #141C23;
+  text-decoration: underline;
+}
+.flash-success {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  border: 1px solid #c3e6cb;
+}
+.flash-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  border: 1px solid #f5c6cb;
+}
+</style>
+</head>
+<body>
+
+<div class="top-banner">Fresh Roasts, Fast Delivery Nationwide!</div>
+
+<div class="header">
+<div class="nav-container">
+<div class="hamburger" onclick="toggleMenu()">☰</div>
+<div class="nav-links" id="menu">
+  <a href="/">Home</a>
+  <a href="/products">All Products</a>
+  <a href="/cart">Cart (<%= cart.length %>)</a>
+  <% if (currentUser) { %>
+    <a href="/auth/logout">Logout</a>
+  <% } else { %>
+    <a href="/auth/login">Login</a>
+  <% } %>
+</div>
+</div>
+<img src="/images/title.png">
+</div>
+
+<div class="cart-container">
+  <h2>YOUR CART</h2>
+
+  <% if (success && success.length > 0) { %>
+    <div class="flash-success"><%= success %></div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div class="flash-error"><%= error %></div>
+  <% } %>
+
+  <% if (cart.length === 0) { %>
+    <div class="empty-cart">
+      <p>Your cart is empty.</p>
+      <a href="/products">Browse Products</a>
+    </div>
+  <% } else { %>
+
+    <% cart.forEach(item => { %>
+    <div class="cart-item">
+      <img src="<%= item.image %>" alt="<%= item.name %>">
+      <div class="cart-item-info">
+        <h3><%= item.name %></h3>
+        <p>PKR <%= item.price.toLocaleString() %> each</p>
+        <p><strong>Subtotal: PKR <%= (item.price * item.quantity).toLocaleString() %></strong></p>
+      </div>
+      <div class="cart-item-actions">
+        <form action="/cart/update" method="POST" style="display:flex;gap:6px;align-items:center;">
+          <input type="hidden" name="productId" value="<%= item.productId %>">
+          <input type="number" name="quantity" value="<%= item.quantity %>" min="0">
+          <button type="submit" class="btn-update">Update</button>
+        </form>
+        <form action="/cart/remove" method="POST">
+          <input type="hidden" name="productId" value="<%= item.productId %>">
+          <button type="submit" class="btn-remove">Remove</button>
+        </form>
+      </div>
+    </div>
+    <% }) %>
+
+    <div class="cart-total">Total: PKR <%= total.toLocaleString() %></div>
+
+    <form action="/cart/checkout" method="POST">
+      <button type="submit" class="checkout-btn">PLACE ORDER</button>
+    </form>
+
+  <% } %>
+</div>
+
+<div class="footer">
+<p>Our Journey | Our Locations</p>
+<p>© 2026 All Rights Reserved</p>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>

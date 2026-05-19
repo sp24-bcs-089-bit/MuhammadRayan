@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Products - Third Class Coffee</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.filters {
+    background: white;
+    padding: 20px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+.filters input, .filters select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+.filters button {
+    padding: 8px 20px;
+    background: #141C23;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.filters button:hover { background: #7FAE9E; }
+.page-title { text-align: center; padding: 30px 20px 0; }
+.page-title h2 { font-size: 28px; margin: 0; }
+.no-products { text-align: center; padding: 60px 20px; color: #888; font-size: 18px; }
+.pagination { text-align: center; padding: 30px 20px; }
+.pagination a {
+    display: inline-block;
+    margin: 0 4px;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+.pagination a.active { background: #141C23; color: white; border-color: #141C23; }
+.pagination a:hover:not(.active) { background: #7FAE9E; color: white; }
+.product-card h3 { padding: 0 10px; font-size: 15px; }
+.product-card p { color: #555; font-size: 14px; margin: 4px 0 8px; }
+.stock-badge { font-size: 12px; color: #7FAE9E; padding: 2px 10px 8px; }
+</style>
+</head>
+<body>
+
+<div class="top-banner">Fresh Roasts, Fast Delivery Nationwide!</div>
+
+<div class="header">
+<div class="nav-container">
+<div class="hamburger" onclick="toggleMenu()">☰</div>
+<div class="nav-links" id="menu">
+  <a href="/">Home</a>
+  <a href="/products">All Products</a>
+  <a href="/cart">Cart</a>
+  <% if (currentUser) { %>
+    <% if (currentUser.role === "admin") { %>
+      <a href="/admin">Dashboard</a>
+    <% } %>
+    <a href="/auth/logout">Logout</a>
+  <% } else { %>
+    <a href="/auth/register">Register</a>
+    <a href="/auth/login">Login</a>
+  <% } %>
+</div>
+</div>
+<img src="/images/title.png">
+<div class="order-buttons">
+<button type="button">Delivery</button>
+<button type="button">Self Pickup</button>
+</div>
+</div>
+
+<div class="page-title"><h2>ALL PRODUCTS</h2></div>
+
+<form class="filters" method="GET" action="/products">
+    <input type="text" name="search" placeholder="Search products..." value="<%= search %>">
+    <select name="category">
+        <option value="">All Categories</option>
+        <% categories.forEach(cat => { %>
+            <option value="<%= cat %>" <%= category === cat ? 'selected' : '' %>><%= cat %></option>
+        <% }) %>
+    </select>
+    <input type="number" name="minPrice" placeholder="Min Price" value="<%= minPrice == 0 ? '' : minPrice %>" style="width:100px">
+    <input type="number" name="maxPrice" placeholder="Max Price" value="<%= maxPrice == 100000 ? '' : maxPrice %>" style="width:100px">
+    <button type="submit">Filter</button>
+    <a href="/products" style="font-size:13px; color:#888; text-decoration:none; margin-left:4px;">Clear</a>
+</form>
+
+<div class="products">
+<% if (products.length === 0) { %>
+    <div class="no-products">No products found. <a href="/products">View all</a></div>
+<% } else { %>
+    <% products.forEach(product => { %>
+    <div class="product-card">
+        <img src="<%= product.image %>" alt="<%= product.name %>">
+        <h3><%= product.name %></h3>
+        <p>PKR <%= product.price.toLocaleString() %></p>
+        <% if (product.stock > 0) { %>
+            <div class="stock-badge">In Stock (<%= product.stock %>)</div>
+            <div class="price-bar" onclick="window.location.href='/cart/add?productId=<%= product._id %>'" style="cursor:pointer;">Add to Cart</div>
+        <% } else { %>
+            <div class="price-bar">Out of Stock</div>
+        <% } %>
+    </div>
+    <% }) %>
+<% } %>
+</div>
+
+<% if (totalPages > 1) { %>
+<div class="pagination">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/products?page=<%= i %>&search=<%= search %>&category=<%= category %>&minPrice=<%= minPrice %>&maxPrice=<%= maxPrice %>"
+           class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+</div>
+<% } %>
+
+<div class="footer">
+<p>Our Journey | Our Locations</p>
+<p>© 2026 All Rights Reserved</p>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>
